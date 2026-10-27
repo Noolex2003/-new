@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>เกมนักสืบชนิดของคำ ม.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Mitr:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fff8e7;--card:#ffffff;--ink:#2b2a33;--mut:#6b6877;--pri:#ff7a45;--pri2:#e4572e;--line:#f0d9a8;--ok:#1f9d63;--okbg:#dcf6e8;--bad:#d64545;--badbg:#fde2e2;--hl:#fff0b8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1b2a;--card:#2a2740;--ink:#f6f1e6;--mut:#b7b2c6;--pri:#ff9566;--pri2:#ff7a45;--line:#4a4570;--ok:#5ddc9a;--okbg:#17402e;--bad:#ff8a8a;--badbg:#4a2328;--hl:#4a4220}}
+:root[data-theme="dark"]{--bg:#1d1b2a;--card:#2a2740;--ink:#f6f1e6;--mut:#b7b2c6;--pri:#ff9566;--pri2:#ff7a45;--line:#4a4570;--ok:#5ddc9a;--okbg:#17402e;--bad:#ff8a8a;--badbg:#4a2328;--hl:#4a4220}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.6}
+.wrap{max-width:640px;margin:0 auto;padding:18px 14px 40px}
+h1{font-family:'Mitr',sans-serif;font-weight:500;margin:6px 0;text-align:center;color:var(--pri2);font-size:1.7rem}
+.sub{text-align:center;color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 6px 0 var(--line)}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:8px}
+.timer{font-family:'Mitr',sans-serif;font-size:1.2rem;padding:2px 12px;border-radius:999px;background:var(--hl)}
+.timer.low{background:var(--badbg);color:var(--bad)}
+.bar{height:10px;border-radius:10px;background:var(--line);overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:100%;background:var(--ok);transition:width 1s linear,background .3s}
+.bar.low i{background:var(--bad)}
+.q{font-size:1.15rem;margin:4px 0 12px}
+.q b{background:var(--hl);padding:0 6px;border-radius:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;margin-top:9px;padding:11px 13px;border:2px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer;box-shadow:0 3px 0 var(--line);transition:transform .08s}
+.opt:hover:not(:disabled){border-color:var(--pri)}
+.opt:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.opt .l{flex:0 0 32px;height:32px;border-radius:50%;background:var(--hl);display:grid;place-items:center;font-weight:700}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad)}
+.why{margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--hl);border-left:6px solid var(--pri)}
+.go{display:block;width:100%;margin-top:14px;padding:13px;border:0;border-radius:14px;background:var(--pri);color:#fff;font-family:'Mitr',sans-serif;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 0 var(--pri2)}
+.go:active{transform:translateY(3px);box-shadow:0 1px 0 var(--pri2)}
+.big{font-size:3.2rem;text-align:center}
+.c{text-align:center}
+.tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:.95rem}
+.tbl td,.tbl th{border:1px solid var(--line);padding:7px 8px;vertical-align:top;text-align:left}
+.tbl th{background:var(--hl)}
+.tags span{display:inline-block;background:var(--hl);border-radius:999px;padding:1px 10px;margin:2px;font-size:.9rem}
+.sc{font-family:'Mitr',sans-serif;font-size:2.4rem;color:var(--pri2);text-align:center}
+.rv{margin:6px 0;padding:8px 10px;border-radius:10px;font-size:.95rem}
+.rv.ok{background:var(--okbg)}.rv.bad{background:var(--badbg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔍 นักสืบชนิดของคำ</h1>
+  <p class="sub">วิชาภาษาไทย ชั้น ม.2 · 10 ข้อ · ข้อละ 30 วินาที</p>
+  <div id="app"></div>
+</div>
+<script>
+var Q=[
+{q:"คำที่ใช้เรียกชื่อ <b>คน สัตว์ สิ่งของ สถานที่</b> เช่น ครู แมว โต๊ะ โรงเรียน เรียกว่าคำชนิดใด?",o:["คำนาม","คำกริยา","คำสรรพนาม","คำบุพบท"],w:"คำนามคือคำเรียกชื่อสิ่งต่างๆ รอบตัว เช่น “แมวของฉันชื่อมะลิ” แมว และ มะลิ เป็นคำนาม"},
+{q:"ในประโยค “ครูเรียก<b>เขา</b>มาพบหลังเลิกเรียน” ข้อใดเป็นคำ<b>สรรพนาม</b>?",o:["เขา","ครู","พบ","หลังเลิกเรียน"],w:"สรรพนามคือคำที่ใช้แทนคำนามเพื่อไม่ต้องพูดซ้ำ “เขา” แทนชื่อเพื่อนที่ถูกเรียก ส่วน ครู เป็นนาม และ พบ เป็นกริยา"},
+{q:"ในประโยค “น้อง<b>วิ่ง</b>รอบสนามทุกเช้า” ข้อใดเป็นคำ<b>กริยา</b> (บอกอาการ การกระทำ)?",o:["วิ่ง","น้อง","สนาม","ทุกเช้า"],w:"คำกริยาบอกการกระทำหรืออาการ ถามตัวเองว่า “น้องทำอะไร” คำตอบคือ “วิ่ง” จึงเป็นกริยา"},
+{q:"ข้อใดมี<b>คำวิเศษณ์ขยายคำนาม</b>?",o:["ฉันซื้อกระเป๋าใบใหม่","เด็กหญิงวิ่งเร็ว","พ่อไปทำงานแล้ว","เธอกับฉันเป็นเพื่อนกัน"],w:"“ใหม่” ขยายคำนาม “กระเป๋า” ให้รู้ว่ากระเป๋าเป็นแบบไหน ส่วน “เร็ว” และ “แล้ว” ขยายคำกริยา"},
+{q:"ในประโยค “หนังสือวางอยู่<b>บน</b>โต๊ะ” คำว่า “บน” เป็นคำชนิดใด?",o:["คำบุพบท","คำนาม","คำอุทาน","คำสันธาน"],w:"คำบุพบทนำหน้านามเพื่อบอกความสัมพันธ์ เช่น ที่ ใน บน ใต้ ของ แก่ “บน” บอกตำแหน่งของหนังสือเทียบกับโต๊ะ"},
+{q:"ในประโยค “ฉันอยากเล่นเกม <b>แต่</b>ต้องทำการบ้านก่อน” คำว่า “แต่” เป็นคำชนิดใด?",o:["คำสันธาน","คำบุพบท","คำวิเศษณ์","คำสรรพนาม"],w:"คำสันธานทำหน้าที่เชื่อมคำ ประโยค หรือข้อความ “แต่” เชื่อมสองเรื่องที่ขัดแย้งกัน คำสันธานอื่น เช่น และ หรือ เพราะ ดังนั้น"},
+{q:"คำอุทานทำหน้าที่อะไร?",o:["แสดงอารมณ์ความรู้สึก เช่น โอ๊ย ว้าย โอ้โฮ","เรียกชื่อคนและสิ่งของ","เชื่อมประโยคเข้าด้วยกัน","บอกความสัมพันธ์ของคำ"],w:"คำอุทานเป็นเสียงที่พูดออกมาตามความรู้สึก เช่น “โอ๊ย! ปวดท้อง” “ว้าว! สวยจัง” มักตามด้วยเครื่องหมาย ! ได้"},
+{q:"ข้อใดที่คำว่า “<b>ของ</b>” เป็นคำ<b>บุพบท</b>?",o:["หนังสือของฉันหาย","แม่ซื้อของที่ตลาด","ของหวานอร่อยมาก","ของเล่นอยู่ในกล่อง"],w:"“ของ” ในข้อแรกบอกความเป็นเจ้าของ (บุพบท) ส่วนข้ออื่น “ของ” เป็นชื่อสิ่งของ จึงเป็นคำนาม"},
+{q:"ข้อใดเป็นคำ<b>สรรพนามทั้งหมด</b>?",o:["ฉัน เธอ เขา","ครู แม่ พ่อ","กิน นอน เดิน","สวย ดี เร็ว"],w:"ฉัน เธอ เขา ใช้แทนคนที่พูดถึง ส่วน ครู แม่ พ่อ เป็นนาม, กิน นอน เดิน เป็นกริยา, สวย ดี เร็ว เป็นวิเศษณ์"},
+{q:"ข้อใดบอกชนิดของคำได้<b>ถูกต้อง</b>?",o:["“ใหญ่” ในประโยค “บ้านหลังใหญ่” เป็นคำวิเศษณ์","“แมว” ในประโยค “แมวนอนหลับ” เป็นคำกริยา","“ฉัน” ในประโยค “ฉันหิวแล้ว” เป็นคำบุพบท","“แต่” ในประโยค “เขาเก่งแต่ขี้เกียจ” เป็นคำนาม"],w:"“ใหญ่” ขยายนาม “บ้าน” จึงเป็นวิเศษณ์ ส่วน แมว เป็นนาม, ฉัน เป็นสรรพนาม, แต่ เป็นสันธาน"},
+{q:"ในประโยค “<b>โอ้โฮ!</b> ขนมเค้กก้อนใหญ่จัง” คำใดเป็นคำอุทาน?",o:["โอ้โฮ","ขนมเค้ก","ก้อนใหญ่","จัง"],w:"“โอ้โฮ” แสดงความประหลาดใจของผู้พูดจึงเป็นคำอุทาน ส่วน “จัง” เป็นคำวิเศษณ์ขยายคำว่า ใหญ่"}
+];
+/* ใช้ 10 ข้อแรกที่คละครอบคลุม 7 ชนิดคำ (ข้อ 11 เป็นข้อสำรอง) */
+var T=[["คำนาม","เรียกชื่อคน สัตว์ สิ่งของ สถานที่","ครู แมว โต๊ะ โรงเรียน"],["คำสรรพนาม","ใช้แทนคำนามที่พูดถึงแล้ว","ฉัน เธอ เขา เรา"],["คำกริยา","บอกอาการ การกระทำ","วิ่ง กิน นอน อ่าน"],["คำวิเศษณ์","ขยายนาม กริยา วิเศษณ์ ให้ชัดเจน","ใหม่ เร็ว มาก สวย"],["คำบุพบท","นำหน้านาม บอกความสัมพันธ์","ใน บน ที่ ของ แก่"],["คำสันธาน","เชื่อมคำ ประโยค ข้อความ","และ หรือ แต่ เพราะ"],["คำอุทาน","แสดงอารมณ์ความรู้สึก","โอ๊ย ว้าย โอ้โฮ"]];
+var L=["ก","ข","ค","ง"],app=document.getElementById("app"),qs,i,sc,tm,left,res,locked;
+function sh(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=a[k];a[k]=a[j];a[j]=t}return a}
+function home(){app.innerHTML='<div class="card c"><div class="big">🕵️‍♀️📚</div><p>ภารกิจของนักสืบ: ไขปริศนาชนิดของคำให้ครบ <b>7 ชนิด</b></p><div class="tags"><span>นาม</span><span>สรรพนาม</span><span>กริยา</span><span>วิเศษณ์</span><span>บุพบท</span><span>สันธาน</span><span>อุทาน</span></div><p>ตอบข้อละไม่เกิน <b>30 วินาที</b> ถ้าหมดเวลาถือว่าตอบผิด ระบบจะเฉลยพร้อมเหตุผลทุกข้อ</p><button class="go" id="st">เริ่มภารกิจ</button></div>';document.getElementById("st").onclick=start}
+function start(){qs=sh(Q.slice(0,10)).map(function(q){return{q:q.q,w:q.w,c:q.o[0],o:sh(q.o)}});i=0;sc=0;res=[];show()}
+function show(){
+ clearInterval(tm);locked=false;left=30;var q=qs[i];
+ var h='<div class="card"><div class="top"><span>ข้อ '+(i+1)+' / 10 · ⭐ '+sc+'</span><span class="timer" id="tm">⏱ 30</span></div><div class="bar" id="br"><i id="bi"></i></div><div class="q">'+q.q+'</div>';
+ q.o.forEach(function(o,k){h+='<button class="opt" data-k="'+k+'"><span class="l">'+L[k]+'</span><span>'+o+'</span></button>'});
+ app.innerHTML=h+'<div id="fb"></div></div>';
+ app.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){pick(+b.dataset.k)}});
+ tm=setInterval(function(){left--;var t=document.getElementById("tm");t.textContent="⏱ "+left;document.getElementById("bi").style.width=(left/30*100)+"%";
+  if(left<=10){t.classList.add("low");document.getElementById("br").classList.add("low")}
+  if(left<=0)pick(-1)},1000);
+}
+function pick(k){
+ if(locked)return;locked=true;clearInterval(tm);var q=qs[i],ok=k>=0&&q.o[k]===q.c;
+ app.querySelectorAll(".opt").forEach(function(b,x){b.disabled=true;if(q.o[x]===q.c)b.classList.add("ok");else if(x===k)b.classList.add("bad")});
+ if(ok)sc++;res.push({n:i+1,ok:ok,to:k<0,c:L[q.o.indexOf(q.c)]+". "+q.c});
+ var last=i===9,msg=ok?"🎉 ถูกต้อง!":(k<0?"⏰ หมดเวลา! ":"😅 ยังไม่ถูก ")+"คำตอบคือข้อ "+L[q.o.indexOf(q.c)];
+ document.getElementById("fb").innerHTML='<div class="why"><b>'+msg+'</b><br>'+q.w+'</div><button class="go" id="nx">'+(last?"ดูสรุปผลและความรู้":"ข้อต่อไป ➜")+'</button>';
+ document.getElementById("nx").onclick=function(){i++;last?end():show()};
+}
+function end(){
+ var t=sc>=9?["🏆","นักสืบชนิดของคำระดับเทพ!"]:sc>=7?["🥇","เก่งมาก! ใกล้เป็นยอดนักสืบแล้ว"]:sc>=5?["🥈","ทำได้ดี! ทบทวนอีกนิดจะแม่นขึ้น"]:["🌱","เริ่มต้นได้ดี! อ่านสรุปแล้วลองเล่นอีกครั้งนะ"];
+ var h='<div class="card"><div class="big">'+t[0]+'</div><div class="sc">'+sc+' / 10</div><p class="c"><b>'+t[1]+'</b></p><h3>🔎 ย้อนดูผลแต่ละข้อ</h3>';
+ res.forEach(function(r){h+='<div class="rv '+(r.ok?"ok":"bad")+'">ข้อ '+r.n+': '+(r.ok?"✅ ถูก":(r.to?"⏰ หมดเวลา":"❌ ผิด")+" (เฉลย "+r.c+")")+'</div>'});
+ h+='<h3>📘 สรุปความรู้: ชนิดของคำ 7 ชนิด</h3><div style="overflow-x:auto"><table class="tbl"><tr><th>ชนิดคำ</th><th>หน้าที่</th><th>ตัวอย่าง</th></tr>';
+ T.forEach(function(r){h+='<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'});
+ h+='</table></div><div class="why"><b>เคล็ดลับนักสืบ:</b> คำเดียวกันอาจเปลี่ยนชนิดได้ตามประโยค เช่น “ของ” ใน “ซื้อของ” เป็นนาม แต่ใน “หนังสือของฉัน” เป็นบุพบท ให้ดูว่าคำนั้น <i>ทำหน้าที่อะไรในประโยค</i> ไม่ใช่ดูแค่รูปคำ</div><button class="go" id="ag">เล่นอีกครั้ง</button></div>';
+ app.innerHTML=h;document.getElementById("ag").onclick=start;scrollTo(0,0);
+}
+home();
+</script>
+</body>
+</html>
